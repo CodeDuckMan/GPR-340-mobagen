@@ -7,16 +7,26 @@ Vector2f SeparationRule::computeForce(const std::vector<Boid*>& neighborhood, Bo
   // Try to avoid boids too close
   Vector2f separatingForce = Vector2f::zero();
 
-  //    float desiredDistance = desiredMinimalDistance;
-  //
-  //    // todo: implement a force that if neighbor(s) enter the radius, moves the boid away from it/them
-  //    if (!neighborhood.empty()) {
-  //        Vector2f position = boid->transform.position;
-  //        int countCloseFlockmates = 0;
-  //        // todo: find and apply force only on the closest mates
-  //    }
+  float desiredDistance = desiredMinimalDistance;
 
-  separatingForce = Vector2f::normalized(separatingForce);
+  if (!neighborhood.empty()) {
+    Vector2f hat = Vector2f::zero();
+    Vector2f target = Vector2f::zero();
+
+    double magnitude = 0;
+
+    // Collect all boid positions in neighborhood
+    for (int i = 0; i < neighborhood.size(); i++) {
+      target += (boid->getPosition() - neighborhood[i]->getPosition()) ;
+
+      // If target magnitude
+      magnitude = target.getMagnitude();
+      if (magnitude < desiredDistance && magnitude != 0) {
+        hat = target / magnitude;
+        separatingForce += hat * desiredDistance / magnitude;
+      }
+    }
+  }
 
   return separatingForce;
 }
