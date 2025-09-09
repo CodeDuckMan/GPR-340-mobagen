@@ -6,19 +6,22 @@
 Vector2f MouseInfluenceRule::computeForce(const std::vector<Boid*>& neighborhood, Boid* boid) {
   ImGui::SetCurrentContext(world->engine->window->imGuiContext);
      ImGuiIO& io = ImGui::GetIO();
+
+      float neighbourhoodRadius = boid->getDetectionRadius();
       if (ImGui::IsMousePosValid() && io.MouseDown[0]) {
 
-        Vector2f mousePos(io.MousePos.x, io.MousePos.y); // todo: use this
-        float detectionRadius = boid->getDetectionRadius();
+        // Get mouse position
+        Vector2f mousePos(io.MousePos.x, io.MousePos.y);
 
         // Check if mouse is in range of boid
-        bool mouseInXRange = mousePos.x >= boid->getPosition().x - detectionRadius && mousePos.x <= boid->getPosition().x + detectionRadius;
-        bool mouseInYRange = mousePos.y >= boid->getPosition().y - detectionRadius && mousePos.y <= boid->getPosition().y + detectionRadius;
+        bool mouseInXRange = mousePos.x >= boid->getPosition().x - neighbourhoodRadius && mousePos.x <= boid->getPosition().x + neighbourhoodRadius;
+        bool mouseInYRange = mousePos.y >= boid->getPosition().y - neighbourhoodRadius && mousePos.y <= boid->getPosition().y + neighbourhoodRadius;
 
-        if (mouseInXRange && mouseInYRange) {
+        // If the boid is in the mouse range or range is set to global
+        if ((mouseInXRange && mouseInYRange) || mouseGrabGlobal) {
 
           //The force is inversely proportional to distance
-          Vector2f targetForce = Vector2f::zero(); // todo: change this
+          Vector2f targetForce = Vector2f::zero(); //
 
           targetForce = mousePos - boid->getPosition();
           targetForce = targetForce - boid->getVelocity();
@@ -46,6 +49,17 @@ bool MouseInfluenceRule::drawImguiRuleExtra() {
   ImGui::SameLine();
   if (ImGui::RadioButton("Repulsive", isRepulsive)) {
     isRepulsive = true;
+    valueHasChanged = true;
+  }
+
+  if (ImGui::RadioButton("Mouse Neighborhood Attraction", !mouseGrabGlobal)) {
+    mouseGrabGlobal = false;
+    valueHasChanged = true;
+  }
+
+  ImGui::SameLine();
+  if (ImGui::RadioButton("Mouse Global Attraction", mouseGrabGlobal)) {
+    mouseGrabGlobal = true;
     valueHasChanged = true;
   }
 

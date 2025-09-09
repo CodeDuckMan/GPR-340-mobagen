@@ -7,9 +7,6 @@ Vector2f BoundedAreaRule::computeForce(const std::vector<Boid*>& neighborhood, B
   // Return a force proportional to the proximity of the boids with the bounds, and opposed to it
   Vector2f targetForce = Vector2f::zero();
 
-  // todo: add here your code code here do make the boid follow the bounded box rule
-  // hint: use this->world->engine->window->size() and desiredDistance
-
   int windowSizeX = this->world->engine->window->size().x;
   int windowSizeY = this->world->engine->window->size().y;
 
@@ -19,7 +16,7 @@ Vector2f BoundedAreaRule::computeForce(const std::vector<Boid*>& neighborhood, B
   bool boidAboveWindowY = boid->getPosition().y + desiredDistance > windowSizeY;
   bool boidBelowWindowY = boid->getPosition().y - desiredDistance < 0;
 
-  //
+  // Apply targetForce depending on the previous checks
   if (boidAboveWindowX)
     targetForce.x -= boid->getPosition().x;
   else if (boidBelowWindowX)
