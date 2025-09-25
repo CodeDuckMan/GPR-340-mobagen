@@ -5,16 +5,21 @@ void JohnConway::Step(World& world) {
   // todo: implement
 
   int numNeighbors = 0;
+  bool currentCellState = false;
   for (int i = 0; i < world.SideSize(); ++i) {
     for (int j = 0; j < world.SideSize(); ++j) {
 
       numNeighbors = CountNeighbors(world,Point2D (i,j));
-      if (numNeighbors < 2 || numNeighbors > 3) {
-        world.SetNext(Point2D(i,j), false);
-      }
-      else {
+
+      currentCellState = world.Get(Point2D(i, j));
+
+      if (((numNeighbors == 2 || numNeighbors == 3) && currentCellState) || (numNeighbors == 3 && !currentCellState)) {
         world.SetNext(Point2D(i,j), true);
       }
+      else {
+        world.SetNext(Point2D(i,j), false);
+      }
+      numNeighbors =0;
     }
   }
 }
@@ -28,8 +33,8 @@ int JohnConway::CountNeighbors(World& world, Point2D point) {
   int numNeighbors = 0;
 
 
-  for (int i = -1; i < 1; ++i) {
-    for (int j = -1; j < 1; ++j) {
+  for (int i = -1; i < 2; ++i) {
+    for (int j = -1; j < 2; ++j) {
 
       if (i == 0 && j == 0) {
         self = true;
@@ -39,7 +44,7 @@ int JohnConway::CountNeighbors(World& world, Point2D point) {
       }
 
       // Check if self
-      if (world.Get(Point2D(targetY+i, targetX + j)) && !self) {
+      if (world.Get(Point2D(targetX + i, targetY + j)) && !self) {
         numNeighbors++;
       }
 
