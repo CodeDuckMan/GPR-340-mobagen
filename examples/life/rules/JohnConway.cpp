@@ -27,7 +27,6 @@ void JohnConway::Step(World& world) {
 int JohnConway::CountNeighbors(World& world, Point2D point) {
   // todo: implement
 
-  bool self = false;
   int targetY = point.y;
   int targetX = point.x;
   int numNeighbors = 0;
@@ -36,15 +35,8 @@ int JohnConway::CountNeighbors(World& world, Point2D point) {
   for (int i = -1; i < 2; ++i) {
     for (int j = -1; j < 2; ++j) {
 
-      if (i == 0 && j == 0) {
-        self = true;
-      }
-      else {
-        self = false;
-      }
-
-      // Check if self
-      if (world.Get(Point2D(targetX + i, targetY + j)) && !self) {
+      // Check neighbor state and if self
+      if (world.Get(Point2D(targetX + i, targetY + j)) && (i != 0 || j != 0)) {
         numNeighbors++;
       }
 
