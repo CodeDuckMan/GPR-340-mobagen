@@ -6,10 +6,9 @@
 bool RecursiveBacktrackerExample::Step(World* w) {
   // todo: implement this
 
-  // Add top left to stack
+  // Add bootstrap case : top left to stack
   if (w->GetNodeColor(Point2D (-w->GetSize() / 2,-w->GetSize() / 2)) == Color::DarkGray) {
     stack.emplace_back(-w->GetSize() / 2,-w->GetSize() / 2);
-
   }
 
     Point2D top = stack.back();
@@ -24,14 +23,30 @@ bool RecursiveBacktrackerExample::Step(World* w) {
 
       if (neighbors.size() == 1) {
         nextNeighbor = neighbors.front();
-        // remove wall in the direction
       }
+
       else {
-        //
         int randomIndex = rand() % neighbors.size();
-        nextNeighbor = neighbors.at(randomIndex);
+        nextNeighbor = neighbors[(randomIndex)];
 
         // remove wall that will be in that direction
+        // Check right
+        if (nextNeighbor.x - top.x > 0)
+          w->SetEast(top, false);
+
+        // Check left
+        if (nextNeighbor.x - top.x < 0)
+          w->SetWest(top, false);
+
+        // Check up
+        if (nextNeighbor.y - top.y > 0)
+          w->SetNorth(top, false);
+
+        // Check down
+        if (nextNeighbor.y - top.y < 0)
+          w->SetSouth(top, false);
+
+
       }
 
       stack.push_back(nextNeighbor);
