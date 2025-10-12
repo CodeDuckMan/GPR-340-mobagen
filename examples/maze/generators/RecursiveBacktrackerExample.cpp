@@ -91,20 +91,22 @@ std::vector<Point2D> RecursiveBacktrackerExample::getVisitables(World* w, const 
   // todo: implement this
 
 
-  if (w->GetNodeColor(p.Up()) == Color::DarkGray) {
+  // Check up
+  if ( p.y - w->GetSize() >= 0 && w->GetNodeColor(p.Up()) == Color::DarkGray) {
     visitables.push_back(p.Up());
 }
 
-  if (w->GetNodeColor(p.Right()) == Color::DarkGray) {
+  // Check right
+  if ( p.x + 1 < visited.size() && w->GetNodeColor(p.Right()) == Color::DarkGray) {
     visitables.push_back(p.Right());
 }
-
-  if (w->GetNodeColor(p.Down()) == Color::DarkGray) {
+  // Check down
+  if ( p.y + w->GetSize() < visited.size() && w->GetNodeColor(p.Down()) == Color::DarkGray) {
     visitables.push_back(p.Down());
 }
-
-  if (w->GetNodeColor(p.Right()) == Color::DarkGray) {
-    visitables.push_back(p.Right());
+  // Check left
+  if ( p.x - 1 >= 0 && w->GetNodeColor(p.Left()) == Color::DarkGray) {
+    visitables.push_back(p.Left());
 }
 
   return visitables;
