@@ -31,19 +31,19 @@ bool RecursiveBacktrackerExample::Step(World* w) {
 
         // remove wall that will be in that direction
         // Check right
-        if (nextNeighbor.x - top.x > 0)
+        if (nextNeighbor.x > top.x )
           w->SetEast(top, false);
 
         // Check left
-        if (nextNeighbor.x - top.x < 0)
+        if (nextNeighbor.x < top.x )
           w->SetWest(top, false);
 
         // Check up
-        if (nextNeighbor.y - top.y > 0)
+        if (nextNeighbor.y > top.y)
           w->SetNorth(top, false);
 
         // Check down
-        if (nextNeighbor.y - top.y < 0)
+        if (nextNeighbor.y < top.y)
           w->SetSouth(top, false);
 
 
@@ -90,22 +90,36 @@ std::vector<Point2D> RecursiveBacktrackerExample::getVisitables(World* w, const 
 
   // todo: implement this
 
-
-  if (w->GetNodeColor(p.Up()) == Color::DarkGray) {
+    // Check up
+    if (p.y - 1 >= -sideOver2 // Check inside roomIndex boundaries
+        && w->GetNodeColor(p.Up()) == Color::DarkGray) // if Check not visited
+    {
     visitables.push_back(p.Up());
-}
+    }
 
-  if (w->GetNodeColor(p.Right()) == Color::DarkGray) {
+    // Check right
+    if ( p.x + 1 <= sideOver2 // Check inside roomIndex boundaries
+        && (p.x + 1)/ w->GetSize() == p.x/w->GetSize() // Check if attempting to wrap around
+        && w->GetNodeColor(p.Right()) == Color::DarkGray) // Check if not visited
+    {
     visitables.push_back(p.Right());
-}
+    }
 
-  if (w->GetNodeColor(p.Down()) == Color::DarkGray) {
-    visitables.push_back(p.Down());
-}
+    // Check bellow
+    if ( p.y + sideOver2 < visited.size() // Check inside roomIndex boundaries
+        && w->GetNodeColor(p.Down()) == Color::DarkGray) // Check if not visited
+    {
+     visitables.push_back(p.Down());
+    }
 
-  if (w->GetNodeColor(p.Right()) == Color::DarkGray) {
-    visitables.push_back(p.Right());
-}
+    // Check left
+    if ( p.x - 1 >= -sideOver2 // Check inside roomIndex boundaries
+        && (p.x)/w->GetSize() == (p.x - 1) / w->GetSize() // Check if attempting to wrap around
+        &&  w->GetNodeColor(p.Left()) == Color::DarkGray) // Check if not visited
+    {
+    visitables.push_back(p.Left());
+    }
+
 
   return visitables;
 }
