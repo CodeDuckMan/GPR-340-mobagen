@@ -28,6 +28,7 @@ bool RecursiveBacktrackerExample::Step(World* w) {
       else {
         int randomIndex = rand() % neighbors.size();
         nextNeighbor = neighbors[(randomIndex)];
+      }
 
         // remove wall that will be in that direction
         // Check right
@@ -39,15 +40,12 @@ bool RecursiveBacktrackerExample::Step(World* w) {
           w->SetWest(top, false);
 
         // Check up
-        if (nextNeighbor.y > top.y)
+        if (nextNeighbor.y < top.y)
           w->SetNorth(top, false);
 
         // Check down
-        if (nextNeighbor.y < top.y)
+        if (nextNeighbor.y > top.y)
           w->SetSouth(top, false);
-
-
-      }
 
       stack.push_back(nextNeighbor);
     }
