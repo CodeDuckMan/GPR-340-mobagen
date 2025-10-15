@@ -31,21 +31,21 @@ bool RecursiveBacktrackerExample::Step(World* w) {
       }
 
         // remove wall that will be in that direction
-        // Check right
-        if (nextNeighbor.x > top.x )
-          w->SetEast(top, false);
-
-        // Check left
-        if (nextNeighbor.x < top.x )
-          w->SetWest(top, false);
-
         // Check up
-        if (nextNeighbor.y < top.y)
+        if (nextNeighbor.y < top.y && top.y > -w->GetSize() / 2)
           w->SetNorth(top, false);
 
+        // Check right
+        if (nextNeighbor.x > top.x && top.x < w->GetSize() / 2)
+          w->SetEast(top, false);
+
         // Check down
-        if (nextNeighbor.y > top.y)
+        if (nextNeighbor.y > top.y && top.y < w->GetSize() / 2)
           w->SetSouth(top, false);
+
+        // Check left
+        if (nextNeighbor.x < top.x && top.x > -w->GetSize() / 2)
+          w->SetWest(top, false);
 
       stack.push_back(nextNeighbor);
     }
@@ -104,7 +104,7 @@ std::vector<Point2D> RecursiveBacktrackerExample::getVisitables(World* w, const 
     }
 
     // Check bellow
-    if ( p.y + sideOver2 < visited.size() // Check inside roomIndex boundaries
+    if ( p.y + 1 + sideOver2 < visited.size() // Check inside roomIndex boundaries
         && w->GetNodeColor(p.Down()) == Color::DarkGray) // Check if not visited
     {
      visitables.push_back(p.Down());
