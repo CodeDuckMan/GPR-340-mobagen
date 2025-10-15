@@ -89,14 +89,14 @@ std::vector<Point2D> RecursiveBacktrackerExample::getVisitables(World* w, const 
   // todo: implement this
 
     // Check up
-    if (p.y - 1 >= -sideOver2 // Check inside roomIndex boundaries
+    if (p.y - 1 >= -sideOver2 // Check inside boundaries
         && w->GetNodeColor(p.Up()) == Color::DarkGray) // if Check not visited
     {
     visitables.push_back(p.Up());
     }
 
     // Check right
-    if ( p.x + 1 <= sideOver2 // Check inside roomIndex boundaries
+    if ( p.x + 1 <= sideOver2 // Check inside boundaries
         && (p.x + 1)/ w->GetSize() == p.x/w->GetSize() // Check if attempting to wrap around
         && w->GetNodeColor(p.Right()) == Color::DarkGray) // Check if not visited
     {
@@ -104,14 +104,14 @@ std::vector<Point2D> RecursiveBacktrackerExample::getVisitables(World* w, const 
     }
 
     // Check bellow
-    if ( p.y + 1 + sideOver2 < visited.size() // Check inside roomIndex boundaries
+    if ( p.y + 1 + sideOver2 < visited.size() // Check inside boundaries
         && w->GetNodeColor(p.Down()) == Color::DarkGray) // Check if not visited
     {
      visitables.push_back(p.Down());
     }
 
     // Check left
-    if ( p.x - 1 >= -sideOver2 // Check inside roomIndex boundaries
+    if ( p.x - 1 >= -sideOver2 // Check inside boundaries
         && (p.x)/w->GetSize() == (p.x - 1) / w->GetSize() // Check if attempting to wrap around
         &&  w->GetNodeColor(p.Left()) == Color::DarkGray) // Check if not visited
     {
