@@ -14,35 +14,50 @@ void World::SwapBuffers() {
 }
 // todo: improve those set / get accessors
 void World::SetNext(Point2D point, bool value) {
-  if (point.x < 0) point.x += sideSize;
-  if (point.x >= sideSize) point.x %= sideSize;
-  if (point.y < 0) point.y += sideSize;
-  if (point.y >= sideSize) point.y %= sideSize;
-  auto index = point.y * sideSize + point.x;
+
+  int targetY = (point.y + (int)sideSize) % (int)sideSize;
+  int targetX = (point.x + (int)sideSize) % (int)sideSize;
+
+  auto index = targetY * sideSize + targetX;
+
   auto sideSquared = sideSize * sideSize;
-  if (index >= sideSquared) index %= sideSquared;
+
+  if (index >= sideSquared) {
+    index %= sideSquared;
+  }
+
   buffer[(currentBufferId + 1) % 2][index] = value;
 }
 // todo: improve those set / get accessors
 void World::SetCurrent(Point2D point, bool value) {
-  if (point.x < 0) point.x += sideSize;
-  if (point.x >= sideSize) point.x %= sideSize;
-  if (point.y < 0) point.y += sideSize;
-  if (point.y >= sideSize) point.y %= sideSize;
-  auto index = point.y * sideSize + point.x;
+
+  int targetY = (point.y + (int)sideSize) % (int)sideSize;
+  int targetX = (point.x + (int)sideSize) % (int)sideSize;
+
+  auto index = targetY * sideSize + targetX;
+
   auto sideSquared = sideSize * sideSize;
-  if (index >= sideSquared) index %= sideSquared;
+
+  if (index >= sideSquared) {
+    index %= sideSquared;
+  }
+
   buffer[currentBufferId % 2][index] = value;
 }
 // todo: improve those set / get accessors
 bool World::Get(Point2D point) {
-  if (point.x < 0) point.x += sideSize;
-  if (point.x >= sideSize) point.x %= sideSize;
-  if (point.y < 0) point.y += sideSize;
-  if (point.y >= sideSize) point.y %= sideSize;
-  auto index = point.y * sideSize + point.x;
+
+  int targetY = (point.y + (int)sideSize) % (int)sideSize;
+  int targetX = (point.x + (int)sideSize) % (int)sideSize;
+
+  auto index = targetY * sideSize + targetX;
+
   auto sideSquared = sideSize * sideSize;
-  if (index >= sideSquared) index %= sideSquared;
+
+  if (index >= sideSquared) {
+    index %= sideSquared;
+  }
+
   return buffer[currentBufferId % 2][index];
 }
 void World::Randomize() {

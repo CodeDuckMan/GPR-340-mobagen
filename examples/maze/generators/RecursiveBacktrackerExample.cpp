@@ -2,9 +2,62 @@
 #include "Random.h"
 #include "RecursiveBacktrackerExample.h"
 #include <climits>
+
 bool RecursiveBacktrackerExample::Step(World* w) {
   // todo: implement this
-  return false;
+
+  // Add bootstrap case : top left to stack
+  if (w->GetNodeColor(Point2D (-w->GetSize() / 2,-w->GetSize() / 2)) == Color::DarkGray) {
+    stack.emplace_back(-w->GetSize() / 2,-w->GetSize() / 2);
+  }
+
+    Point2D top = stack.back();
+
+    // If top has neighbors
+    if (!getVisitables(w, top).empty()) {
+      w->SetNodeColor(top, Color::CornflowerBlue);
+
+      // getNeighbors
+      std::vector<Point2D> neighbors = getVisitables(w, top);
+      Point2D nextNeighbor;
+
+      if (neighbors.size() == 1) {
+        nextNeighbor = neighbors.front();
+      }
+
+      else {
+        int randomIndex = rand() % neighbors.size();
+        nextNeighbor = neighbors[(randomIndex)];
+      }
+
+        // remove wall that will be in that direction
+        // Check up
+        if (nextNeighbor.y < top.y)
+          w->SetNorth(top, false);
+
+        // Check right
+        if (nextNeighbor.x > top.x)
+          w->SetEast(top, false);
+
+        // Check down
+        if (nextNeighbor.y > top.y)
+          w->SetSouth(top, false);
+
+        // Check left
+        if (nextNeighbor.x < top.x)
+          w->SetWest(top, false);
+
+      stack.push_back(nextNeighbor);
+    }
+
+    else {
+      w->SetNodeColor(top, Color::Black);
+      stack.pop_back();
+    }
+
+
+
+  return !stack.empty();
 }
 
 void RecursiveBacktrackerExample::Clear(World* world) {
@@ -34,6 +87,37 @@ std::vector<Point2D> RecursiveBacktrackerExample::getVisitables(World* w, const 
   std::vector<Point2D> visitables;
 
   // todo: implement this
+
+    // Check up
+    if (p.y - 1 >= -sideOver2 // Check inside boundaries
+        && w->GetNodeColor(p.Up()) == Color::DarkGray) // if Check not visited
+    {
+    visitables.push_back(p.Up());
+    }
+
+    // Check right
+    if ( p.x + 1 <= sideOver2 // Check inside boundaries
+        && (p.x + 1)/ w->GetSize() == p.x/w->GetSize() // Check if attempting to wrap around
+        && w->GetNodeColor(p.Right()) == Color::DarkGray) // Check if not visited
+    {
+    visitables.push_back(p.Right());
+    }
+
+    // Check bellow
+    if ( p.y + 1 + sideOver2 < visited.size() // Check inside boundaries
+        && w->GetNodeColor(p.Down()) == Color::DarkGray) // Check if not visited
+    {
+     visitables.push_back(p.Down());
+    }
+
+    // Check left
+    if ( p.x - 1 >= -sideOver2 // Check inside boundaries
+        && (p.x)/w->GetSize() == (p.x - 1) / w->GetSize() // Check if attempting to wrap around
+        &&  w->GetNodeColor(p.Left()) == Color::DarkGray) // Check if not visited
+    {
+    visitables.push_back(p.Left());
+    }
+
 
   return visitables;
 }
