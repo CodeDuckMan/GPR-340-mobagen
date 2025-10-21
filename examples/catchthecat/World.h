@@ -98,6 +98,8 @@ public:
   // returns true if cat wins on the given space
   bool catWinsOnSpace(Point2D point);
 
+  std::vector<Point2D> getVisitableNeighbors(Point2D point);
+
   static std::vector<Point2D> neighbors(Point2D point) {
     std::vector<Point2D> n;
     n.push_back(NE(point));

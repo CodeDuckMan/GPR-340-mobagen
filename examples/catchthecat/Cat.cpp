@@ -8,6 +8,7 @@ Point2D Cat::Move(World* world) {
 
   std::vector<Point2D>path = generatePath(world);
 
+
   switch (rand) {
     case 0:
       return World::NE(pos);

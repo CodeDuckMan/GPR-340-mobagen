@@ -23,7 +23,6 @@ std::vector<Point2D> Agent::generatePath(World* w) {
   unordered_map<Point2D, Point2D> cameFrom;  // to build the flowfield and build the path
   priority_queue<Point2DWithPriority> frontier;                   // to store next ones to visit
   //unordered_set<Point2D> frontierSet;        // OPTIMIZATION to check faster if a point is in the queue
-  unordered_set<Point2D> visited;      // use .at() to get data, if the element dont exist [] will give you wrong results
   Heuristic heuristic;
 
   unordered_map<Point2D, double> cost_so_far;
@@ -39,35 +38,38 @@ std::vector<Point2D> Agent::generatePath(World* w) {
 
   std::vector<Point2D> currentNeighbours;
 
-    auto current = frontier.top();
 
   while (!frontier.empty()) {
 
     // get the current from frontier
+    auto current = frontier.top();
+
+    frontier.pop();
+
+
 
     // Check if current is goal
-    if (current.point == goalNode) {
+    if (w->catWinsOnSpace(current.point)) {
+      goalNode = current.point;
       break;
     }
 
     // mark current as visited
-    visited.emplace(current.point);
 
     // getVisitableNeighbours(world, current) returns a vector of neighbors that are not visited, not cat, not block, not in the queue
-    currentNeighbours = w->neighbors(current.point);
+    currentNeighbours = w->getVisitableNeighbors(current.point);
 
-    // if neighbor is not valid or has been visited, remove from currentNeighbors
-    for (int i = 0; i < currentNeighbours.size(); ++i) {
-      if (!w->isValidPosition(currentNeighbours.at(i)) || visited.contains(currentNeighbours.at(i))) {
-        currentNeighbours.erase(currentNeighbours.begin() + i);
-      }
-    }
 
     // iterate over the neighs:
     for (auto neighbour : currentNeighbours)
     {
+
+      if (cameFrom.contains(neighbour)) {
+        continue;
+      }
+
       // Create new cost from current cost + the cost from current node to neighhor
-      float newCost = cost_so_far[current.point] + 1;
+      double newCost = cost_so_far[current.point] + 1;
 
       // If cost_so_far does not contain neighbor or if the new cost is lower than the neighbors current cost
       if (!cost_so_far.contains(neighbour) || newCost < cost_so_far[neighbour] ){
@@ -81,31 +83,25 @@ std::vector<Point2D> Agent::generatePath(World* w) {
       frontier.emplace(neighbour, priority);
       //frontierSet.insert(neighbour);
       cameFrom[neighbour] = current.point;
+
     }
 
-    currentNeighbours.clear();
     //frontierSet.erase(current);
-    frontier.pop();
-
-    // do this up to find a visitable border and break the loop
-    if (cameFrom.contains(Point2D::INFINITE)) {
-      break;
-    }
 
   }
 
   // If we run out of nodes
   if (!cameFrom.contains(goalNode)) {
-    return vector<Point2D>();
+    return {};
   }
   else {
-
     vector<Point2D> finalPath;
-    while (current.point != w->getCat()) {
-      finalPath.push_back(cameFrom[current.point]);
-      current.point = cameFrom[current.point];
+    Point2D current = goalNode;
+    while (current != w->getCat()) {
+      finalPath.push_back(cameFrom[current]);
+      current = cameFrom[current];
     }
-    std::reverse(finalPath.begin(), finalPath.end());
+    ranges::reverse(finalPath);
     return finalPath;
 
 }
