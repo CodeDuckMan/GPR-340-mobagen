@@ -4,6 +4,7 @@
 #include <queue>
 #include "World.h"
 
+
 #include <algorithm>
 using namespace std;
 
@@ -36,7 +37,7 @@ std::vector<Point2D> Agent::generatePath(World* w) {
 
   Point2D goalNode = Point2D::INFINITE;  // if at the end of the loop we dont find a border, we have to return random points
 
-  std::vector<Point2D> currentNeighbours;
+
 
 
   while (!frontier.empty()) {
@@ -57,7 +58,7 @@ std::vector<Point2D> Agent::generatePath(World* w) {
     // mark current as visited
 
     // getVisitableNeighbours(world, current) returns a vector of neighbors that are not visited, not cat, not block, not in the queue
-    currentNeighbours = w->getVisitableNeighbors(current.point);
+    std::vector<Point2D> currentNeighbours = w->getVisitableNeighbors(current.point);
 
 
     // iterate over the neighs:
@@ -97,7 +98,10 @@ std::vector<Point2D> Agent::generatePath(World* w) {
   else {
     vector<Point2D> finalPath;
     Point2D current = goalNode;
-    while (current != w->getCat()) {
+    finalPath.push_back(current);
+
+    while (cameFrom[current] != w->getCat()) {
+
       finalPath.push_back(cameFrom[current]);
       current = cameFrom[current];
     }
@@ -120,6 +124,10 @@ float Heuristic::EstimateNodeNodeCost(Point2D fromNode, Point2D targetNode) {
   float dx = abs(static_cast<float>(fromNode.x) - static_cast<float>(targetNode.x));
   float dy = abs(static_cast<float>(fromNode.y) - static_cast<float>(targetNode.y));
 
-  return (dx + dy);
+  if (std::sin(dx) == std::sin(dy)) {
+    return (dx + dy);
+  }
+
+  return max(dx, dy);
 
 }

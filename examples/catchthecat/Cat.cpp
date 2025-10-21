@@ -8,21 +8,21 @@ Point2D Cat::Move(World* world) {
 
   std::vector<Point2D>path = generatePath(world);
 
-
-  switch (rand) {
-    case 0:
-      return World::NE(pos);
-    case 1:
-      return World::NW(pos);
-    case 2:
-      return World::E(pos);
-    case 3:
-      return World::W(pos);
-    case 4:
-      return World::SW(pos);
-    case 5:
-      return World::SE(pos);
-    default:
-      throw "random out of range";
+  if (!path.empty()) {
+    return path.front();
   }
+
+  Point2D newPos;
+
+  std::vector<Point2D>neighbors = world->getVisitableNeighbors(pos);
+  if (!neighbors.empty()) {
+    newPos = neighbors.at(rand % neighbors.size());
+
+    return newPos;
+  }
+
+  throw "Cat::Move()failed";
+
+
+
 }
