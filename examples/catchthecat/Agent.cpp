@@ -116,7 +116,7 @@ std::vector<Point2D> Agent::generatePath(World* w) {
 }
 float Heuristic::EstimateCostNodeBorder(Point2D theNode, int sideSize) {
 
-  return min(sideSize / 2 - abs(theNode.x), sideSize / 2 + abs(theNode.y));
+  return min(static_cast<float>(sideSize) / 2 - abs(theNode.x), static_cast<float>(sideSize) / 2 + abs(theNode.y));
 }
 
 float Heuristic::EstimateNodeNodeCost(Point2D fromNode, Point2D targetNode) {
