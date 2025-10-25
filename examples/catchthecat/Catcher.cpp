@@ -12,9 +12,11 @@ Point2D Catcher::Move(World* world) {
 
 
   for (;;) {
-    Point2D p = {Random::Range(-side, side), Random::Range(-side, side)};
-    auto cat = world->getCat();
-    if (cat.x != p.x && cat.y != p.y && !world->getContent(p)) return p;
+    // Gets the cats current valid neighbors and fills in a random one
+    std::vector<Point2D>pointNeighbors = world->getVisitableNeighbors(world->getCat());
+    Point2D point = pointNeighbors.at(rand() % pointNeighbors.size());
+
+    return point;
 
   }
 }
